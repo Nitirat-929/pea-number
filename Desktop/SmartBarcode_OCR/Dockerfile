@@ -1,28 +1,24 @@
-# ใช้ Python Slim
-FROM python:3.9-slim
+# ใช้ Base Image ที่มี CUDA (Driver การ์ดจอ) ในตัว
+FROM pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
 
-# ตั้งค่าพื้นฐาน
+# ตั้งค่าพื้นฐาน Python
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+
 WORKDIR /app
 
-# 1. ลง Driver ที่จำเป็น (ZBar สำหรับ Barcode, GL สำหรับ OpenCV)
+# ติดตั้ง Library พื้นฐานสำหรับ OpenCV (แก้ปัญหา cv2)
 RUN apt-get update && apt-get install -y \
-    libgl1 \
+    libgl1-mesa-glx \
     libglib2.0-0 \
-    libzbar0 \
     && rm -rf /var/lib/apt/lists/*
 
-# 2. ลง PyTorch แบบ CPU-Only (นี่คือจุดสำคัญที่ทำให้ไฟล์เล็ก!)
-# เราเจาะจงโหลดจาก link ของ cpu โดยเฉพาะ
-RUN pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu
-
-# 3. ลง Library อื่นๆ ตามมา
+# Copy ไฟล์ settings และติดตั้ง Library
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 4. ก๊อปปี้โค้ด
-COPY src/ ./src/
+# Copy โค้ดทั้งหมดเข้ากล่อง
+COPY . .
 
-# สั่งรันโปรแกรม
+# สั่งรันโปรแกรม (ชี้ไปที่โฟลเดอร์ src)
 CMD ["python", "src/main.py"]

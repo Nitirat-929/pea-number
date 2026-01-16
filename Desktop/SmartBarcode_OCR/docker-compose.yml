@@ -5,11 +5,12 @@ services:
     build: .
     container_name: smart_scanner
     ports:
-      - "8501:8501"  # เปิด Port สำหรับ Streamlit (ถ้าใช้) หรือ API
+      - "8501:8501"
     volumes:
-      - ./data:/app/data  # เชื่อมโฟลเดอร์ data ตามภาพเดิม
+      - ./data:/app/data
     
-    # --- ส่วนที่เพิ่มเพื่อเปิดใช้ GPU (RTX 3050 Ti) ---
+    # --- แก้ไขจุดนี้: ลบส่วน deploy ทิ้ง หรือ Comment ไว้ ---
+    # ถ้าเครื่องไหนมีการ์ดจอ และลง NVIDIA Container Toolkit แล้วค่อยเปิดใช้
     deploy:
       resources:
         reservations:
@@ -17,10 +18,9 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+    # ----------------------------------------------------
     
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
-    # -----------------------------------------------
     
     tty: true
