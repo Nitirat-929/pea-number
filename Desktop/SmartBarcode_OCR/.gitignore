@@ -1,0 +1,12 @@
+# ไม่เอาไฟล์ข้อมูลขึ้น (Privacy)
+data/
+result.csv
+*.csv
+*.xlsx
+
+# ไม่เอาไฟล์ขยะของ Python ขึ้น
+__pycache__/
+*.pyc
+.env
+.venv
+venv/
