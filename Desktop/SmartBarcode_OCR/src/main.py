@@ -44,7 +44,9 @@ def preprocess_image(img_cv2):
         enhancer = ImageEnhance.Contrast(img_gray)
         img_enhanced = enhancer.enhance(2.0)
         return np.array(img_enhanced)
-    except Exception as e:
+    # แก้ข้างในให้เรียกใช้ e
+except Exception as e:
+    print(f"Error occurred: {e}")  # เพิ่ม {e} เข้าไป เพื่อให้มันถูกใช้งาน
         return img_cv2
 
 def analyze_image(img_np):
